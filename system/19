@@ -1,0 +1,31 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    19                                                 :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nvienot <nvienot@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/02/21 19:13:14 by nvienot           #+#    #+#              #
+#    Updated: 2019/02/21 19:13:14 by nvienot          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+Services qui se lancent automatiquement lorsque la machine boot :
+
+console-setup.sh
+cron
+dbus
+hwclock.sh
+irqbalance
+keyboard-setup.sh
+kmod
+networking
+procps
+rsync
+rsyslog
+ssh
+sudo
+udev
+
+Voir /etc/init.d
+Nom : on les appelle "startup scripts"

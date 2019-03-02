@@ -1,0 +1,36 @@
+#!/bin/bash
+
+read -p "Type the name of the user you want to erase : " name
+
+if id -u $name > /dev/null 2>&1
+then
+	echo "\033[32m$name found :)\033[0m"
+else
+	echo "\033[31m$name not found :( Please try again\033[0m"
+	exit
+fi
+
+log=$(sudo pgrep -u $name)
+
+if $log
+then
+	sudo pkill -u $name > /dev/null 2>&1
+	echo "\033[32mProcessus killed\033[0m"
+fi
+
+sudo crontab -r -u $name > /dev/null 2>&1
+echo "\033[32mCron erased\033[0m"
+
+sudo passwd -l $name > /dev/null 2>&1
+echo "\033[32mPassword locked\033[0m"
+
+echo "\033[31mDo you want to erase the home directory and the mail spool owned by $name ?\033[0m"
+read -p "yes/no : " maj
+if [ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]
+then
+	sudo deluser --remove-home $name > /dev/null 2>&1
+	echo "\033[32m/home and mail spool of $name erased !\033[0m"
+else
+	sudo deluser $name > /dev/null 2>&1
+fi
+echo "\033[32m$name successfully erased !\033[0m"

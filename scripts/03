@@ -1,0 +1,345 @@
+#!/bin/bash
+
+red='\e[0;31m'
+green='\e[0;32m'
+orange='\e[0;33m'
+blue='\e[1;34m'
+neutral='\e[0;m'
+
+install_pers()
+{
+	echo -e "${blue}What packages do you want to install?
+1 - Install ssh
+2 - Install git
+3 - Install vim
+4 - Install net-tools
+5 - Install curl
+6 - Install zsh
+7 - Install ohmyzsh
+8 - Install fail2ban
+9 - Quit${neutral}"
+	read -p "1/2/3/4/5/6/7/8/9 : " pck
+	while ([ $pck != 9 ] || [ -z $pck ]) > /dev/null 2>&1
+	do
+		if [ $pck = "1" ] > /dev/null 2>&1
+		then
+			install_ssh
+		elif [ $pck = "2" ] > /dev/null 2>&1
+		then
+			install_git
+		elif [ $pck = "3" ] > /dev/null 2>&1
+		then
+			install_vim
+		elif [ $pck = "4" ] > /dev/null 2>&1
+		then
+			install_nettools
+		elif [ $pck = "5" ] > /dev/null 2>&1
+		then
+			install_curl
+		elif [ $pck = "6" ] > /dev/null 2>&1
+		then
+			install_zsh
+		elif [ $pck = "7" ] > /dev/null 2>&1
+		then
+			install_ohmyzsh
+		elif [ $pck = "8" ] > /dev/null 2>&1
+		then
+			install_fail2ban
+		else
+			echo -e "${red}You need to type a number between 1 and 8!${neutral}"
+		fi
+		echo -e "${blue}Do you want to install another package?
+1 - Install ssh
+2 - Install git
+3 - Install vim
+4 - Install net-tools
+5 - Install curl
+6 - Install zsh
+7 - Install ohmyzsh
+8 - Install fail2ban
+9 - Quit${neutral}"
+		read -p "1/2/3/4/5/6/7/8/9 : " pck
+	done
+}
+
+install_fail2ban()
+{
+	if [ -e /usr/bin/fail2ban-client ]; 
+	then
+		echo -e "${green}Fail2ban already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install fail2ban
+    		echo -e "${green}Fail2ban has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Fail2ban has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install fail2ban
+    	echo -e "${green}Fail2ban has been successfully installed.${neutral}"
+	fi
+}
+
+install_ohmyzsh()
+{
+	if [ -d /root/.oh-my-zsh ];
+	then
+		echo -e "${green}Ohmyzsh already installed !${neutral}"
+	else
+		if [ -e /usr/bin/curl ] && [ -e /usr/bin/zsh ] && [ -e /usr/bin/git ]; 
+		then
+			echo -e "${blue}Git, Curl and Zsh are installed, let's install Ohmyzsh${neutral}"
+			sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
+			echo -e "${green}Ohmyzsh has been successfully installed.${neutral}"
+		else
+			echo -e "${orange}You need to install Git, Curl and Zsh in order to install Ohmyzsh, do you want to install those packages?${neutral}"
+			read -p "yes/no : " maj
+			if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+			then
+				install_git
+				install_curl
+				install_zsh
+				sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
+				echo -e "${green}Curl, Zsh and Ohmyzsh have been successfully installed.${neutral}"
+			else
+				echo -e "${orange}Ohmyzsh has not been installed.${neutral}"
+			fi
+		fi
+	fi
+}
+
+install_nettools()
+{
+	if [ -e /usr/share/doc/net-tools ]; 
+	then
+		echo -e "${green}Net-tools already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install net-tools
+    		echo -e "${green}Net-tools has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Net-tools has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install net-tools
+    	echo -e "${green}Net-tools has been successfully installed.${neutral}"
+	fi
+}
+
+install_curl()
+{
+	if [ -e /usr/bin/curl ]; 
+	then
+		echo -e "${green}Curl already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install curl
+    		echo -e "${green}Curl has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Curl has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install curl
+    	echo -e "${green}Curl has been successfully installed.${neutral}"
+	fi
+}
+
+install_zsh()
+{
+	if [ -e /usr/bin/zsh ]; 
+	then
+		echo -e "${green}Zsh already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install zsh
+    		echo -e "${green}Zsh has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Zsh has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install zsh
+    	echo -e "${green}Zsh has been successfully installed.${neutral}"
+	fi
+}
+
+install_vim()
+{
+	if [ -e /usr/bin/vim ]; 
+	then
+		echo -e "${green}Vim already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install vim
+    		echo -e "${green}Vim has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Vim has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install vim
+    	echo -e "${green}Vim has been successfully installed.${neutral}"
+	fi
+}
+
+install_git()
+{
+	if [ -e /usr/bin/git ]; 
+	then
+		echo -e "${green}Git already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install git
+    		echo -e "${green}Git has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Git has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install git
+    	echo -e "${green}Git has been successfully installed.${neutral}"
+	fi
+}
+
+install_ssh()
+{
+	if [ -e /usr/bin/ssh ]; 
+	then
+		echo -e "${green}Ssh already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			sudo apt install ssh
+    		echo -e "${green}Ssh has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Ssh has not been updated.${neutral}"
+		fi
+  	else
+    	sudo apt install ssh
+    	echo -e "${green}Ssh has been successfully installed.${neutral}"
+	fi
+}
+
+install_sudo()
+{
+	if [ -e /usr/bin/sudo ]; 
+	then
+		echo -e "${green}Sudo already installed!
+${blue}Do you want to update it?${neutral}"
+		read -p "yes/no : " maj
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+			su -c "apt install sudo"
+    		echo -e "${green}Sudo has been successfully updated.${neutral}"
+		else
+			echo -e "${orange}Sudo has not been updated.${neutral}"
+		fi
+  	else
+		echo -e "${blue}Do you want to intall Sudo?${neutral}"
+		if ([ $maj = "y" ] || [ $maj = "o" ] || [ $maj = "yes" ] || [ $maj = "Y" ] || [ $maj = "O" ] || [ $maj = "oui" ] || [ $maj = "OUI" ] || [ $maj = "YES" ]) > /dev/null 2>&1
+		then
+    		su -c "apt install sudo"
+    		echo -e "${green}Sudo has been successfully installed.${neutral}"
+		else
+			echo -e "${red}Sudo has not been installed. Careful, you need to install Sudo in order for this tool to work.${neutral}"
+		fi
+	fi
+}
+
+update_upgrade()
+{
+	sudo apt-get update
+	sudo apt-get dist-upgrade
+	echo -e "${green}Done!${neutral}"
+}
+
+if [ "$UID" -ne "0" ]
+then
+  echo -e "${red}You need to be logged as root user to use this script.
+Please try again.${neutral}"
+  exit 67
+fi 
+echo -e "${blue}Hello and welcome to <start my VM>.${neutral}"
+echo -e "${blue}First of all, this tool needs Sudo installed to work.${neutral}"
+echo -e	"${green}... checking sudo ...${neutral}"
+	install_sudo
+echo -e "${blue}Alright, let's start by updating the list of available packages and install the newer versions.${neutral}"
+	update_upgrade
+echo -e "${blue}Well, now let's install some useful packages
+1 : Install all the packages available
+2 : Choose your packages
+3 : Don't install anything${neutral}"
+while ([ $choice != 1 ] || [ $choice != 2 ] || [ $choice != 3 ] || [ -z $choice ]) > /dev/null 2>&1
+do
+	read -p "1/2/3 : " choice
+	if [ $choice = "1" ] > /dev/null 2>&1
+	then
+		echo -e "${blue}Installing all...${neutral}"
+		install_ssh
+		install_git
+		install_vim
+		install_nettools
+		install_curl
+		install_zsh
+		install_ohmyzsh
+		install_fail2ban
+		echo -e "${green}All the packages have been installed !${neutral}"
+		break
+	elif [ $choice = "2" ] > /dev/null 2>&1
+	then
+		install_pers
+		break
+	elif [ $choice = "3" ] > /dev/null 2>&1
+	then
+		echo -e "${blue}No packages installed.${neutral}"
+		break
+	else
+		echo -e "${red}No choice made, please try again.${neutral}"
+		echo -e "${blue}1 : Install all the packages available
+2 : Choose your packages
+3 : Don't install anything${neutral}"
+	fi
+done
+echo -e "${blue}Do you want to clear out the local repository of retrieved package files?
+1 : Make clean
+2 : Make autoclean
+3 : Don't clean${neutral}"
+while ([ $choice2 != 1 ] || [ $choice2 != 2 ] || [ $choice2 != 3 ] || [ -z $choice2 ]) > /dev/null 2>&1
+do
+	read -p "1/2/3 : " choice2
+	if [ $choice2 = "1" ] > /dev/null 2>&1
+	then
+		echo -e "${blue}Cleaning...${neutral}"
+		sudo apt-get clean
+		echo -e "${green}Done!${neutral}"
+		break
+	elif [ $choice2 = "2" ] > /dev/null 2>&1
+	then
+		echo -e "${blue}Autocleaning...${neutral}"
+		sudo apt-get autoclean
+		echo -e "${green}Done!${neutral}"
+		break
+	elif [ $choice2 = "3" ] > /dev/null 2>&1
+	then
+		echo -e "${blue}No cleaning.${neutral}"
+		break
+	else
+		echo -e "${red}No choice made, please try again.${neutral}"
+		echo -e "${blue}Do you want to clear out the local repository of retrieved package files?
+1 : Make clean
+2 : Make autoclean
+3 : Don't clean${neutral}"
+	fi
+done
+echo -e "${green}Thanks for using <start my VM> ! See you :)${neutral}"
+exit 0
